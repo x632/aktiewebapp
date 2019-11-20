@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+ 
+</head>
+<body onload="getAktie()">
+    <h1>Aktiedata i realtid</h1>
+    <div id="datat"></div>
+    <br>
+    <canvas id="myCanvas" width="1250" height="600" style="border:1px solid #000000">
+    </canvas>  
+
+<script>
+    //setInterval('getISS()', 3000)
+    
+    var arr;
+    //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
+    const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=STO:LUC&outputsize=full&apikey=PI94RGOINPZE8JOZ'
+    var skrivUt = [];  var open=[];var high =[];var low=[];var close=[]; 
+
+    async function getAktie(){
+        const response = await fetch(api_url);
+        const data = await response.json();
+        console.log(data);
+        arr = Object.entries(data["Time Series (Daily)"]);
+        for (i = 0;i < arr.length; i++){
+            var tid = (arr[i][0]);
+            open[i] = parseFloat(arr[i][1]["1. open"]);
+            high[i] = parseFloat(arr[i][1]["2. high"]);    
+            low[i] = parseFloat(arr[i][1]["3. low"]);
+            close[i] = parseFloat(arr[i][1]["4. close"]); 
+
+            //skrivUt [i]="Tid "+tid+" Open: "+open+" High "+high+" Low "+low+" Close "+close+" ";
+            
+            }
+
+            ritaUtCandleSticks()
+    }
+    function ritaUtCandleSticks(){
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var aktivArrayStorlek = 130;
+    var bredd=8;
+    var melr=10;
+    var ch=600;
+    var avstand=9;
+    var hojd=50;
+    var utr;
+    var storsta 
+   
+  
+    
+    for (i = aktivArrayStorlek; i > 0 ; i-- ){						
+        utr=aktivArrayStorlek-i;
+    
+    if (open[utr]>close[utr]) 	{				//BEARcandle
+            //Rita kropp
+           
+            ctx.lineWidth=1;
+            ctx.fillStyle = "#FF0000";
+            ctx.fillRect(i*avstand+melr+bredd,(ch-(open[utr]*hojd)),bredd,open[utr]*hojd-close[utr]*hojd);			
+            //Rita veke ovanför
+            ctx.beginPath();
+            ctx.lineWidth=2;
+            ctx.fillStyle ="#000000";
+            ctx.moveTo((i*avstand+melr+bredd)+(bredd/2),ch-open[utr]*hojd);
+            ctx.lineTo((i*avstand+melr+bredd)+(bredd/2),ch-(open[utr]*hojd+high[utr]*hojd-open[utr]*hojd));
+            ctx.stroke();
+            //Rita veke under
+            ctx.beginPath();
+            ctx.lineWidth=2;
+            ctx.fillStyle ="#000000";
+            ctx.moveTo(i*avstand+melr+bredd+(bredd/2),ch-low[utr]*hojd);
+            ctx.lineTo(i*avstand+melr+bredd+(bredd/2),ch-close[utr]*hojd);
+            ctx.stroke();
+    }
+    if (close[utr]>open[utr]) 	{				//BULLcandle
+    
+        //Rita kropp
+        ctx.lineWidth=1;
+        ctx.fillStyle = "#009900";
+        ctx.fillRect(i*avstand+melr+bredd,(ch-close[utr]*hojd),bredd,close[utr]*hojd-open[utr]*hojd);							
+        //veke ovanför
+        ctx.beginPath();
+        ctx.lineWidth=2;
+        ctx.fillStyle ="#000000";
+        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),ch-close[utr]*hojd);
+        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),ch-(close[utr]*hojd+(high[utr]*hojd-close[utr]*hojd)));
+        ctx.stroke();
+        //veke under
+        ctx.beginPath();
+        ctx.fillStyle ="#000000";
+        ctx.lineWidth=2;
+        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),ch-open[utr]*hojd);
+        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),ch-low[utr]*hojd);
+        ctx.stroke();
+    }
+    if (close[utr]==open[utr]) 	{				//Doji
+    
+        //Rita kropp
+        ctx.lineWidth=1;
+        ctx.fillStyle ="#000000";
+        ctx.moveTo(i*avstand+melr+bredd,ch-close[utr]*hojd);
+        ctx.lineTo(i*avstand+melr+bredd+bredd,ch-close[utr]*hojd);
+        ctx.stroke();
+        //veke ovanför
+        ctx.beginPath();
+        ctx.lineWidth=2;
+        ctx.fillStyle ="#000000";
+        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),ch-close[utr]*hojd);
+        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),ch-(close[utr]*hojd+(high[utr]*hojd-close[utr]*hojd)));
+        ctx.stroke();
+        //veke under
+        ctx.beginPath();
+        ctx.lineWidth=2;
+        ctx.fillStyle ="#000000";
+        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),ch-open[utr]*hojd);
+        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),ch-low[utr]*hojd);
+        ctx.stroke();				                               
+    }
+    } 
+    }
+</script>  
+
+</body>
+</html>
+
+
