@@ -13,7 +13,7 @@
 </head>
 <body onload="getAktie()">
     <h1>Aktiedata i realtid</h1>
-    <div id="datat"></div>
+    <div id="aktien"></div>
     <br>
     <canvas id="myCanvas" width="1250" height="600" style="border:1px solid #000000">
     </canvas>  
@@ -23,13 +23,15 @@
     
     var arr;
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
-    const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=STO:LUC&outputsize=full&apikey=PI94RGOINPZE8JOZ'
+    const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=STO:AAK&outputsize=full&apikey=PI94RGOINPZE8JOZ'
     var skrivUt = [];  var open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,range=[];
 
     async function getAktie(){
         const response = await fetch(api_url);
         const data = await response.json();
         console.log(data);
+        var aktien=data["Meta Data"]["2. Symbol"];
+        document.getElementById("aktien").textContent=aktien;
         arr = Object.entries(data["Time Series (Daily)"]);
         for (i = 0;i < arr.length; i++){
             var tid = (arr[i][0]);
@@ -62,13 +64,13 @@
     var ctx = canvas.getContext("2d");
     var aktivArrayStorlek = 130;
     var bredd=6;
-    var ch=500;
+    var ch=600;
     var avstand=9;
     var hojd;
     var utr;  
     //range[0] = rangen mellan högsta och lägsta. range[1] = hogsta high i arrayn range [2] = lägsta i arrayn
     hojd = ch/range[0];
-    ch *= range[3]+range[3]*0.05;//range[3] = den procentuella skillnaden mellan range och högsta
+    ch *= range[3]//range[3] = den procentuella skillnaden mellan range och högsta
     ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
     ctx.fillStyle = 'rgb(255, 236, 179)';
     ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
