@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
- 
+    <style>
+        body {
+        background-color: #775c21;
+        }
+      </style>
 </head>
 <body onload="getAktie()">
     <h1>Aktiedata i realtid</h1>
@@ -47,36 +51,27 @@
         storsta=Math.max.apply(null, aktivaArraynHigh);
         minsta=Math.min.apply(null, aktivaArraynLow);
         console.log(storsta+" "+minsta);
-        range [0] = storsta - minsta;
+        range[0] = storsta - minsta;
         range[1] = storsta;
         range[2] = minsta;
+        range[3] = ((range[1]*100)/range[0])/100;
         return range;
     }    
     function ritaUtCandleSticks(){
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
     var aktivArrayStorlek = 130;
-    var bredd=8;
-    var ch=600;
+    var bredd=6;
+    var ch=500;
     var avstand=9;
     var hojd;
     var utr;  
-    procentuellOkning = (range[1]*100)/range[2];
-    hojd = ch/range[0];//range[0] = rangen mellan högsta och lägsta range[1] = hogsta high i arrayn range[2] = lägsta i arrayn
-    console.log(hojd);
-    ch *= 2.08
-    console.log(ch);
-    
-
-    
-    /* ctx.fillStyle = "#FF0000";
-    ctx.fillRect(20,300,30,30);
-
-    ctx.beginPath();
-    ctx.lineWidth=2;
-    ctx.moveTo(20,20);
-    ctx.lineTo(40,300);
-    ctx.stroke(); */
+    //range[0] = rangen mellan högsta och lägsta. range[1] = hogsta high i arrayn range [2] = lägsta i arrayn
+    hojd = ch/range[0];
+    ch *= range[3]+range[3]*0.05;//range[3] = den procentuella skillnaden mellan range och högsta
+    ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
+    ctx.fillStyle = 'rgb(255, 236, 179)';
+    ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
 
     for (i = aktivArrayStorlek; i > 0 ; i-- ){						
         utr=aktivArrayStorlek-i;
