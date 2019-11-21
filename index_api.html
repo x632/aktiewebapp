@@ -20,7 +20,7 @@
     var arr;
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
     const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=STO:LUC&outputsize=full&apikey=PI94RGOINPZE8JOZ'
-    var skrivUt = [];  var open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,range;
+    var skrivUt = [];  var open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,range=[];
 
     async function getAktie(){
         const response = await fetch(api_url);
@@ -41,13 +41,15 @@
             ritaUtCandleSticks()
     }
     function raknaUtRange(){
-        var aktivaArraynHigh =[],aktivaArraynLow=[],storsta,minsta,range;
+        var aktivaArraynHigh =[],aktivaArraynLow=[],storsta,minsta,range=[];
         for (i=0; i<aktivArrayStorlek;i++){
         aktivaArraynHigh[i]=high[i];aktivaArraynLow[i]=low[i]}
         storsta=Math.max.apply(null, aktivaArraynHigh);
         minsta=Math.min.apply(null, aktivaArraynLow);
         console.log(storsta+" "+minsta);
-        range = storsta - minsta;
+        range [0] = storsta - minsta;
+        range[1] = storsta;
+        range[2] = minsta;
         return range;
     }    
     function ritaUtCandleSticks(){
@@ -55,36 +57,48 @@
     var ctx = canvas.getContext("2d");
     var aktivArrayStorlek = 130;
     var bredd=8;
-    var melr=10;
     var ch=600;
     var avstand=9;
     var hojd;
     var utr;  
-    var format;
-    hojd = ch/range;//hur många gånger rangen ryms i canvasen = förstoringsgångaren
-console.log(hojd);
+    procentuellOkning = (range[1]*100)/range[2];
+    hojd = ch/range[0];//range[0] = rangen mellan högsta och lägsta range[1] = hogsta high i arrayn range[2] = lägsta i arrayn
+    console.log(hojd);
+    ch *= 2.08
+    console.log(ch);
+    
+
+    
+    /* ctx.fillStyle = "#FF0000";
+    ctx.fillRect(20,300,30,30);
+
+    ctx.beginPath();
+    ctx.lineWidth=2;
+    ctx.moveTo(20,20);
+    ctx.lineTo(40,300);
+    ctx.stroke(); */
+
     for (i = aktivArrayStorlek; i > 0 ; i-- ){						
         utr=aktivArrayStorlek-i;
     
     if (open[utr]>close[utr]) 	{				//BEARcandle
             //Rita kropp
-           
             ctx.lineWidth=1;
             ctx.fillStyle = "#FF0000";
-            ctx.fillRect(i*avstand+melr+bredd,open[utr]*hojd,bredd,open[utr]*hojd-close[utr]*hojd);			
+            ctx.fillRect(i*avstand+bredd,ch-open[utr]*hojd,bredd,open[utr]*hojd-close[utr]*hojd);			
             //Rita veke ovanför
             ctx.beginPath();
             ctx.lineWidth=2;
             ctx.fillStyle ="#000000";
-            ctx.moveTo((i*avstand+melr+bredd)+(bredd/2),open[utr]*hojd);
-            ctx.lineTo((i*avstand+melr+bredd)+(bredd/2),(open[utr]*hojd+high[utr]*hojd-open[utr]*hojd));
+            ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);//startpunkt x,y
+            ctx.lineTo((i*avstand+bredd)+(bredd/2),(ch-(open[utr]*hojd))+(ch-(high[utr]*hojd))-(ch-(open[utr]*hojd)));
             ctx.stroke();
             //Rita veke under
             ctx.beginPath();
             ctx.lineWidth=2;
             ctx.fillStyle ="#000000";
-            ctx.moveTo(i*avstand+melr+bredd+(bredd/2),low[utr]*hojd);
-            ctx.lineTo(i*avstand+melr+bredd+(bredd/2),close[utr]*hojd);
+            ctx.moveTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
+            ctx.lineTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
             ctx.stroke();
     }
     if (close[utr]>open[utr]) 	{				//BULLcandle
@@ -92,20 +106,20 @@ console.log(hojd);
         //Rita kropp
         ctx.lineWidth=1;
         ctx.fillStyle = "#009900";
-        ctx.fillRect(i*avstand+melr+bredd,(close[utr]*hojd),bredd,close[utr]*hojd-open[utr]*hojd);							
+        ctx.fillRect(i*avstand+bredd,ch-(close[utr]*hojd),bredd,close[utr]*hojd-open[utr]*hojd);//(startpunkt x,y),bredd,höjd						
         //veke ovanför
         ctx.beginPath();
         ctx.lineWidth=2;
         ctx.fillStyle ="#000000";
-        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),close[utr]*hojd);
-        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),(close[utr]*hojd+(high[utr]*hojd-close[utr]*hojd)));
+        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd));
+        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
         ctx.stroke();
         //veke under
         ctx.beginPath();
         ctx.fillStyle ="#000000";
         ctx.lineWidth=2;
-        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),open[utr]*hojd);
-        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),low[utr]*hojd);
+        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
+        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
         ctx.stroke();
     }
     if (close[utr]==open[utr]) 	{				//Doji
@@ -113,22 +127,22 @@ console.log(hojd);
         //Rita kropp
         ctx.lineWidth=1;
         ctx.fillStyle ="#000000";
-        ctx.moveTo(i*avstand+melr+bredd,close[utr]*hojd);
-        ctx.lineTo(i*avstand+melr+bredd+bredd,close[utr]*hojd);
+        ctx.moveTo(i*avstand+bredd,ch-close[utr]*hojd);
+        ctx.lineTo(i*avstand+bredd+bredd,ch-close[utr]*hojd);
         ctx.stroke();
         //veke ovanför
         ctx.beginPath();
         ctx.lineWidth=2;
         ctx.fillStyle ="#000000";
-        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),close[utr]*hojd);
-        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),(close[utr]*hojd+(high[utr]*hojd-close[utr]*hojd)));
+        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
+        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
         ctx.stroke();
         //veke under
         ctx.beginPath();
         ctx.lineWidth=2;
         ctx.fillStyle ="#000000";
-        ctx.moveTo(i*avstand+melr+bredd+(bredd/2),open[utr]*hojd);
-        ctx.lineTo(i*avstand+melr+bredd+(bredd/2),low[utr]*hojd);
+        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
+        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
         ctx.stroke();				                               
     }
     } 
