@@ -7,10 +7,10 @@
     <title>Aktie web app</title>
     <style>
         body {
-        background-color: #775c21;
+        background-color: #8a6b26;
         }
         .dropbtn {
-          background-color: rgb(67, 109, 30);
+          background-color: rgb(81, 133, 36);
           color: rgb(31, 29, 29);
           padding: 5px;
           font-size: 16px;
@@ -42,7 +42,7 @@
         
         .dropdown:hover .dropdown-content {display: block;}
         
-        .dropdown:hover .dropbtn {background-color: #3e8e41;}
+        .dropdown:hover .dropbtn {background-color: #3ca23f;}
       </style>
 </head>
 <body onload="getAktie('STO:LUC')">
@@ -81,6 +81,9 @@
         const response = await fetch(api_url);
         const data = await response.json();
         //console.log(data);
+        if (data["Meta Data"]["2. Symbol"]==undefined);{
+          document.getElementById("aktien").textContent="Just nu är inte denna aktie nåbar på servern, vänta en stund och prova igen, eller prova med en annan aktie."; 
+        } 
         var aktien=data["Meta Data"]["2. Symbol"];
         document.getElementById("aktien").textContent=aktien;
         arr = Object.entries(data["Time Series (Daily)"]);
@@ -111,20 +114,21 @@
         return range;
     }    
     function ritaUtCandleSticks(){
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-    var aktivArrayStorlek = 130;
-    var bredd=6,ch=600,avstand=9,hojd,utr; //utr = variabeln som spegelvänder aktien 
-    hojd = ch/range[0];//range[0] = skillnaden mellan högsta och lägsta "rangen" helt enkelt.
-    ch *= range[3]//range[3] = den procentuella skillnaden mellan range och högsta
-    //färglägger bakgrunden
-    ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
-    ctx.fillStyle = '#ffd38b'; 
-    ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var aktivArrayStorlek = 130;
+        var bredd=6,ch=600,avstand=9,hojd,utr; //utr = variabeln som spegelvänder aktien 
+        hojd = ch/range[0];//range[0] = skillnaden mellan högsta och lägsta "rangen" helt enkelt.
+        ch *= range[3]//range[3] = den procentuella skillnaden mellan range och högsta
+        //färglägger bakgrunden
+        ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
+        ctx.fillStyle = '#ffd38b'; 
+        ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+    //******************************************************************************
     //rita ut prislinje
-    var pris;
-    pris=range[0]*0.10;
-    for (i=range[2];i<=range[1];i+=pris){
+        var pris;
+        pris=range[0]*0.10;
+        for (i=range[2];i<=range[1];i+=pris){
         
         ctx.setLineDash([2, 2]);
         ctx.beginPath();
@@ -139,8 +143,21 @@
         ctx.fillText(pristext, 5, ch-(i*hojd)-3);
         ctx.fillText(pristext, 1215, ch-(i*hojd)-3);
         ctx.stroke();
+        //rita ut nuvarande pris
+        ctx.font = "15px Arial";
+        ctx.beginPath();
+        ctx.lineWidth=1;
+        ctx.strokeStyle = '#000075';
+        ctx.moveTo(0,ch-(close[0]*hojd));//startpunkt x,y
+        ctx.lineTo(1250,ch-(close[0]*hojd));
+        num=close[0];
+        pristext=num.toFixed(2);
+        ctx.fillStyle = '#000095';
+        ctx.fillText(pristext, 40, ch-(close[0]*hojd)+14);
+        ctx.stroke();
     }
     ctx.setLineDash([]);
+    //rita ut candlesticks*********************************************************
     for (i = aktivArrayStorlek; i > 0 ; i-- ){						
         utr=aktivArrayStorlek-i;
     
