@@ -54,7 +54,15 @@
           <a href="#" onclick="getAktie('STO:LUC')">STO:LUC</a>
           <a href="#" onclick="getAktie('STO:AOI')">STO:AOI</a>
           <a href="#" onclick="getAktie('STO:ESSITY-B')">STO:ESSITY-B</a>
-          <a href="#" onclick="getAktie('STO:BETS-B')">STO:BETS-B</a>
+          <a href="#" onclick="getAktie('STO:INWI')">STO:INWI</a>
+          <a href="#" onclick="getAktie('STO:ICA')">STO:ICA</a>
+          <a href="#" onclick="getAktie('STO:LEO')">STO:LEO</a>
+          <a href="#" onclick="getAktie('STO:AAK')">STO:AAK</a>
+          <a href="#" onclick="getAktie('STO:SOBI')">STO:SOBI</a>
+          <a href="#" onclick="getAktie('STO:ALIF-B')">STO:ALIF-B</a>
+          <a href="#" onclick="getAktie('STO:RESURS')">STO:RESURS</a>
+          <a href="#" onclick="getAktie('STO:INDT')">STO:INDT</a>
+          <a href="#" onclick="getAktie('STO:HEMF')">STO:HEMF</a>
         </div>
         <span id="aktien"></span>
       </div>
@@ -111,18 +119,25 @@
     ch *= range[3]//range[3] = den procentuella skillnaden mellan range och högsta
     //färglägger bakgrunden
     ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
-    ctx.fillStyle = '#f0d38b'; 
+    ctx.fillStyle = '#ffd38b'; 
     ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
     //rita ut prislinje
-    for (i=0;i<10;i++){
+    var pris;
+    pris=range[0]*0.10;
+    for (i=range[2];i<=range[1];i+=pris){
+        
         ctx.setLineDash([2, 2]);
         ctx.beginPath();
         ctx.lineWidth=1;
-        ctx.strokeStyle ='#1f1f1f';
-        ctx.moveTo(0,ch-(range[2]*hojd));//startpunkt x,y
-        ctx.lineTo(1250,ch-(range[2]*hojd));
-        /* ctx.moveTo(0,ch-(low[0]*hojd));//startpunkt x,y
-        ctx.lineTo(1250,ch-(low[0]*hojd)); */
+        ctx.strokeStyle = '#909090';
+        ctx.moveTo(0,ch-(i*hojd));//startpunkt x,y
+        ctx.lineTo(1250,ch-(i*hojd));
+        ctx.font = "11px Arial";
+        var num = i;
+        var pristext=num.toFixed(2);
+        ctx.fillStyle = '#707070';
+        ctx.fillText(pristext, 5, ch-(i*hojd)-3);
+        ctx.fillText(pristext, 1215, ch-(i*hojd)-3);
         ctx.stroke();
     }
     ctx.setLineDash([]);
@@ -138,7 +153,7 @@
             ctx.beginPath();
             //ctx.setLineDash([]);
             ctx.lineWidth=2;
-            ctx.fillStyle ='#000000';
+            ctx.strokeStyle ='#000000';
             ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);//startpunkt x,y
             ctx.lineTo((i*avstand+bredd)+(bredd/2),(ch-(open[utr]*hojd))+(ch-(high[utr]*hojd))-(ch-(open[utr]*hojd)));
             ctx.stroke();
@@ -146,7 +161,7 @@
             ctx.beginPath();
             //ctx.setLineDash([]);
             ctx.lineWidth=2;
-            ctx.fillStyle ="#000000";
+            ctx.strokeStyle ="#000000";
             ctx.moveTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
             ctx.lineTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
             ctx.stroke();
@@ -161,14 +176,14 @@
         ctx.beginPath();
         //ctx.setLineDash([]);
         ctx.lineWidth=2;
-        ctx.fillStyle ="#000000";
+        ctx.strokeStyle ="#000000";
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd));
         ctx.lineTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
         ctx.stroke();
         //veke under
         ctx.beginPath();
         //ctx.setLineDash([]);
-        ctx.fillStyle ="#000000";
+        ctx.strokeStyle ="#000000";
         ctx.lineWidth=2;
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
         ctx.lineTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
@@ -187,7 +202,7 @@
         ctx.beginPath();
         //ctx.setLineDash([]);
         ctx.lineWidth=2;
-        ctx.fillStyle ="#000000";
+        ctx.strokeStyle ="#000000";
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
         ctx.lineTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
         ctx.stroke();
@@ -195,7 +210,7 @@
         ctx.beginPath();
         //ctx.setLineDash([]);
         ctx.lineWidth=2;
-        ctx.fillStyle ="#000000";
+        ctx.strokeStyle ="#000000";
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
         ctx.lineTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
         ctx.stroke();				                               
