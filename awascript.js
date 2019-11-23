@@ -5,6 +5,7 @@
     var skrivUt = [];  var open=[],high =[],low=[],close=[], aktivArrayStorlek = 130;
     var riktning=0;rikt=0;
     async function getAktie(symbol){
+        rikt=0;riktning=0;
         const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=full&apikey=PI94RGOINPZE8JOZ'
         const response = await fetch(api_url);
         const data = await response.json();
@@ -29,25 +30,32 @@
         ritaUtCandleSticks(0)
     }
     function raknaUtRange(rikt){
-        var aktivaArraynHigh =[],aktivaArraynLow=[],storsta,minsta,range=[];
+        var aktivaArraynHigh = [],aktivaArraynLow = [],minsta,range = [],hogsta;
+        minsta =high[rikt];
+        hogsta =low[rikt];
         for (i=0+rikt; i<aktivArrayStorlek+rikt;i++){
-        aktivaArraynHigh[i]=high[i];aktivaArraynLow[i]=low[i]}
-        storsta=Math.max.apply(null, aktivaArraynHigh);
-        minsta=Math.min.apply(null, aktivaArraynLow);
-        range[0] = (storsta - minsta);
-        range[1] = storsta;
+            aktivaArraynHigh[i]=high[i];
+            aktivaArraynLow[i]=low[i]
+            if (hogsta<aktivaArraynHigh[i]){hogsta=aktivaArraynHigh[i]};
+            if (minsta>aktivaArraynLow[i]){minsta=aktivaArraynLow[i]};
+           // console.log("high: "+i+" "+aktivaArraynHigh[i]+"högsta so far: "+hogsta+"low: "+i+" "+aktivaArraynLow[i]+" lägsta so far: "+minsta+" low:"+aktivaArraynLow[i]);
+        }   
+        //console.log("Hogsta "+hogsta+" minsta: "+minsta);
+        range[0] = (hogsta - minsta);
+        range[1] = hogsta;
         range[2] = minsta;
-        range[3] = ((range[1]*100)/range[0])*0.01;
+        range[3] = ((range[1]*100)/range[0])*0.01;console.log("range; "+range[3]);
         return range;
     }    
     function ritaUtCandleSticks(rikt){
-        riktning += rikt;console.log(riktning);
+        riktning+=rikt;console.log("variabeln som har tagits emot: "+rikt);
         range=raknaUtRange(riktning);
+        
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         var aktivArrayStorlek = 130;//hur många csticks
         var bredd=6,ch=600,avstand=9,hojd,utr; //utr = variabeln som spegelvänder aktien 
-        hojd = (ch/range[0])*.95;//range[0] = skillnaden mellan högsta och lägsta - "rangen"
+        hojd = (ch/range[0]);//range[0] = skillnaden mellan högsta och lägsta - "rangen"
         //range[3] = den procentuella skillnaden mellan range och högsta
         ch *= range[3];
         //färglägger bakgrunden
