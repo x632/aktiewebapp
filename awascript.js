@@ -3,13 +3,13 @@
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
     var skrivUt = [];  var open=[],high =[],low=[],close=[], aktivArrayStorlek = 130;
-
+    var riktning=0;rikt=0;
     async function getAktie(symbol){
         const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=full&apikey=PI94RGOINPZE8JOZ'
         const response = await fetch(api_url);
         const data = await response.json();
         //console.log(data);
-        if (data["Meta Data"]["2. Symbol"]==undefined);{
+        if (data["Meta Data"]["2. Symbol"]=="undefined");{
           document.getElementById("aktien").textContent="Just nu är inte denna aktie nåbar på servern, vänta en stund och prova igen, eller prova med en annan aktie."; 
         } 
         var aktien=data["Meta Data"]["2. Symbol"];
@@ -25,69 +25,72 @@
             //skrivUt [i]="Tid "+tid+" Open: "+open+" High "+high+" Low "+low+" Close "+close+" ";
             
             }
-            range = raknaUtRange();
-            ritaUtCandleSticks()
+        
+        ritaUtCandleSticks(0)
     }
-    function raknaUtRange(){
+    function raknaUtRange(rikt){
         var aktivaArraynHigh =[],aktivaArraynLow=[],storsta,minsta,range=[];
-        for (i=0; i<aktivArrayStorlek;i++){
+        for (i=0+rikt; i<aktivArrayStorlek+rikt;i++){
         aktivaArraynHigh[i]=high[i];aktivaArraynLow[i]=low[i]}
         storsta=Math.max.apply(null, aktivaArraynHigh);
         minsta=Math.min.apply(null, aktivaArraynLow);
-        console.log(storsta+" "+minsta);
-        range[0] = 1.05*(storsta - minsta);
+        range[0] = (storsta - minsta);
         range[1] = storsta;
         range[2] = minsta;
-        range[3] = ((range[1]*100)/range[0])/100;
+        range[3] = ((range[1]*100)/range[0])*0.01;
         return range;
     }    
-    function ritaUtCandleSticks(){
+    function ritaUtCandleSticks(rikt){
+        riktning += rikt;console.log(riktning);
+        range=raknaUtRange(riktning);
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
-        var aktivArrayStorlek = 130;
+        var aktivArrayStorlek = 130;//hur många csticks
         var bredd=6,ch=600,avstand=9,hojd,utr; //utr = variabeln som spegelvänder aktien 
-        hojd = ch/range[0];//range[0] = skillnaden mellan högsta och lägsta "rangen" helt enkelt.
-        ch *= range[3]//range[3] = den procentuella skillnaden mellan range och högsta
+        hojd = (ch/range[0])*.95;//range[0] = skillnaden mellan högsta och lägsta - "rangen"
+        //range[3] = den procentuella skillnaden mellan range och högsta
+        ch *= range[3];
         //färglägger bakgrunden
         ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
         ctx.fillStyle = '#ffd38b'; 
         ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
     //******************************************************************************
-    //rita ut prislinje
+    //rita ut prislinjerna och siffrorna
         var pris;
-        pris=range[0]*0.10;
-        for (i=range[2];i<=range[1];i+=pris){
-        
-        ctx.setLineDash([2, 2]);
-        ctx.beginPath();
-        ctx.lineWidth=1;
-        ctx.strokeStyle = '#909090';
-        ctx.moveTo(0,ch-(i*hojd));//startpunkt x,y
-        ctx.lineTo(1250,ch-(i*hojd));
-        ctx.font = "11px Arial";
-        var num = i;
-        var pristext=num.toFixed(2);
-        ctx.fillStyle = '#707070';
-        ctx.fillText(pristext, 5, ch-(i*hojd)-3);
-        ctx.fillText(pristext, 1215, ch-(i*hojd)-3);
-        ctx.stroke();
-        //rita ut nuvarande pris
+        pris=range[0]*0.10;//delar rangen i 10 delar med början från lägsta(range[2])
+        for (i=range[2];i<=range[1];i+=pris){    
+            ctx.setLineDash([2, 2]);
+            ctx.beginPath();
+            ctx.lineWidth=1;
+            ctx.strokeStyle = '#909090';
+            ctx.moveTo(0,ch-(i*hojd));//startpunkt x,y
+            ctx.lineTo(1250,ch-(i*hojd));
+            ctx.font = "11px Arial";
+            var num = i;
+            var pristext=num.toFixed(2);
+            ctx.fillStyle = '#707070';
+            ctx.fillText(pristext, 5, ch-(i*hojd)-3);
+            ctx.fillText(pristext, 1215, ch-(i*hojd)-3);
+            ctx.stroke();
+        }
+        //rita ut aktuella priset - linjen
         ctx.font = "15px Arial";
         ctx.beginPath();
-        ctx.lineWidth=1;
-        ctx.strokeStyle = '#000075';
+        ctx.lineWidth=2;
+        ctx.strokeStyle = '#0039e6';
         ctx.moveTo(0,ch-(close[0]*hojd));//startpunkt x,y
         ctx.lineTo(1250,ch-(close[0]*hojd));
+        //rita ut aktuella priset - siffran
         num=close[0];
         pristext=num.toFixed(2);
         ctx.fillStyle = '#000095';
         ctx.fillText(pristext, 40, ch-(close[0]*hojd)+14);
         ctx.stroke();
-    }
-    ctx.setLineDash([]);
+    
+        ctx.setLineDash([]);//ta bort punkter från linjeritningen
     //rita ut candlesticks*********************************************************
-    for (i = aktivArrayStorlek; i > 0 ; i-- ){						
-        utr=aktivArrayStorlek-i;
+    for (i = aktivArrayStorlek; i > 0 ; i-- ){ //från aktivt arrayområdes slut till början			
+        utr=(aktivArrayStorlek-i)+riktning;
     
     if (open[utr]>close[utr]) 	{				//BEARcandle
             //Rita kropp           
@@ -96,7 +99,6 @@
             ctx.fillRect(i*avstand+bredd,ch-open[utr]*hojd,bredd,open[utr]*hojd-close[utr]*hojd);			
             //Rita veke ovanför
             ctx.beginPath();
-            //ctx.setLineDash([]);
             ctx.lineWidth=2;
             ctx.strokeStyle ='#000000';
             ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);//startpunkt x,y
@@ -104,7 +106,6 @@
             ctx.stroke();
             //Rita veke under
             ctx.beginPath();
-            //ctx.setLineDash([]);
             ctx.lineWidth=2;
             ctx.strokeStyle ="#000000";
             ctx.moveTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
@@ -119,7 +120,6 @@
         ctx.fillRect(i*avstand+bredd,ch-(close[utr]*hojd),bredd,close[utr]*hojd-open[utr]*hojd);//(startpunkt x,y),bredd,höjd						
         //veke ovanför
         ctx.beginPath();
-        //ctx.setLineDash([]);
         ctx.lineWidth=2;
         ctx.strokeStyle ="#000000";
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd));
@@ -127,7 +127,6 @@
         ctx.stroke();
         //veke under
         ctx.beginPath();
-        //ctx.setLineDash([]);
         ctx.strokeStyle ="#000000";
         ctx.lineWidth=2;
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
@@ -139,13 +138,11 @@
         //Rita kropp
         ctx.lineWidth=1;
         ctx.fillStyle ="#000000";
-        //ctx.setLineDash([]);
         ctx.moveTo(i*avstand+bredd,ch-close[utr]*hojd);
         ctx.lineTo(i*avstand+bredd+bredd,ch-close[utr]*hojd);
         ctx.stroke();
         //veke ovanför
         ctx.beginPath();
-        //ctx.setLineDash([]);
         ctx.lineWidth=2;
         ctx.strokeStyle ="#000000";
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
@@ -153,7 +150,6 @@
         ctx.stroke();
         //veke under
         ctx.beginPath();
-        //ctx.setLineDash([]);
         ctx.lineWidth=2;
         ctx.strokeStyle ="#000000";
         ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
@@ -161,4 +157,4 @@
         ctx.stroke();				                               
     }
     } 
-    }
+}

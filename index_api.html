@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Aktie web app</title>
     <link rel="stylesheet" type="text/css" href="awa.css?"/>
-    <script type="text/javascript" src="awascript.js"></script>
-    
+    <script type="text/javascript" src="awascript.js"></script>  
 </head>
 <body onload="getAktie('STO:LUC')">
-    
-    <div class="dropdown">
+        <div class="dropdown">
         <button class="dropbtn">Aktier</button>
         <div class="dropdown-content">
           <a href="#" onclick="getAktie('STO:EVO')">STO:EVO</a>
@@ -28,9 +26,12 @@
           <a href="#" onclick="getAktie('STO:INDT')">STO:INDT</a>
           <a href="#" onclick="getAktie('STO:HEMF')">STO:HEMF</a>
         </div>
-        <span id="aktien"></span>
       </div>
-    <canvas id="myCanvas" width="1250" height="600" style="border:2px solid #000000">
+        <div class = "hogstaraden"id ="aktien"></div>
+        <button class="hogstaraden"id="left" onclick="ritaUtCandleSticks(-1)">vänster</button>
+        <button class="hogstaraden"id="right"onclick="ritaUtCandleSticks(1)">höger</button>
+     
+    <canvas id="myCanvas" width="1250" height="650" style="border:2px solid #000000">
     </canvas>  
 
 </body>
