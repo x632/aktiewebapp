@@ -28,10 +28,11 @@
         </div>
       </div>
         <div class = "hogstaraden"id ="aktien"></div>
-        <input type="range" id="koordinat" value="0" min="0" max="50" 
+        <input type="range" id="koordinat" value="0" min="0" max="2000" 
             oninput="ritaUtCandleSticks(1)"/>
-        <button class="hogstaraden"id="left" onclick="ritaUtCandleSticks(-1)">vänster</button>
-        <button class="hogstaraden"id="right"onclick="ritaUtCandleSticks(1)">höger</button>
+        <button class="hogstaraden"id="left" onclick="sattTimerLeft(true)">vänster</button>
+        <button class="hogstaraden"id="right" onclick="sattTimerRight(true)">höger</button>
+       <!--  <button class="hogstaraden"id="right"onmouseover="ritaUtCandleSticks(20)">höger</button> -->
      
     <canvas id="myCanvas" width="1250" height="650" style="border:2px solid #000000">
     </canvas>  

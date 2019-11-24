@@ -1,5 +1,5 @@
 //setInterval('getISS()', 3000)
-    var arr;
+    var arr,aktiv=false,flyttKorTimer,flyttaKordTimer;
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
     var skrivUt = [];  var open=[],high =[],low=[],close=[], aktivArrayStorlek = 130;
@@ -17,7 +17,7 @@
         document.getElementById("aktien").textContent=aktien;
         arr = Object.entries(data["Time Series (Daily)"]);
         for (i = 0;i < arr.length; i++){
-            var tid = (arr[i][0]);
+            var _tid = (arr[i][0]);
             open[i] = parseFloat(arr[i][1]["1. open"]);
             high[i] = parseFloat(arr[i][1]["2. high"]);    
             low[i] = parseFloat(arr[i][1]["3. low"]);
@@ -38,17 +38,35 @@
             aktivaArraynLow[i]=low[i]
             if (hogsta<aktivaArraynHigh[i]){hogsta=aktivaArraynHigh[i]};
             if (minsta>aktivaArraynLow[i]){minsta=aktivaArraynLow[i]};
-           // console.log("high: "+i+" "+aktivaArraynHigh[i]+"högsta so far: "+hogsta+"low: "+i+" "+aktivaArraynLow[i]+" lägsta so far: "+minsta+" low:"+aktivaArraynLow[i]);
         }   
-        //console.log("Hogsta "+hogsta+" minsta: "+minsta);
         range[0] = (hogsta - minsta);
         range[1] = hogsta;
         range[2] = minsta;
-        range[3] = ((range[1]*100)/range[0])*0.01;console.log("range; "+range[3]);
+        range[3] = ((range[1]*100)/range[0])*0.01;
         return range;
     }    
+    function sattTimerLeft(aktiv){
+        if (aktiv==true) {
+            sattTimerRight(false);
+            flyttaKordTimer=setInterval('ritaUtCandleSticks(-1)', 100);
+            }
+                else if (aktiv==false) { 
+                clearInterval(flyttaKordTimer)
+                }
+        }
+    
+        function sattTimerRight(aktiv){
+            if (aktiv==true) {
+                sattTimerLeft(false);
+                flyttKorTimer=setInterval('ritaUtCandleSticks(1)', 100);
+                }
+            else if (aktiv == false){
+                    clearInterval(flyttKorTimer)
+                }
+        }
     function ritaUtCandleSticks(rikt){
-        riktning+=rikt;console.log("variabeln som har tagits emot: "+rikt);
+        riktning+=rikt;
+        console.log("variabeln som har tagits emot: "+riktning);
         range=raknaUtRange(riktning);
         
         var canvas = document.getElementById("myCanvas");
