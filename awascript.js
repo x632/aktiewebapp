@@ -63,7 +63,9 @@
             }
             visaEMA=true;    
         }
-        else{visaEMA=false;}
+        else{
+            visaEMA=false;
+        }
         ritaUtCandleSticks(riktning) 
     }
     function channel(){
