@@ -8,25 +8,15 @@
     <link rel="stylesheet" type="text/css" href="awa.css?"/>
     <script type="text/javascript" src="awascript.js"></script>  
 </head>
-<!-- <body onload="getAktie('STO:LUC')"> -->
 <body>
-      
         <p>Symbol: &nbsp;<input id=inpSymbol value='MSFT' ></p>
-      
-        <p>
-      
-        
+       
           <select id=selFunction onchange=setInterval();  >
-            <option>TIME_SERIES_INTRADAY</option>
             <option>TIME_SERIES_DAILY</option>
-            <option>TIME_SERIES_DAILY_ADJUSTED</option>
+            <option>TIME_SERIES_INTRADAY</option>
             <option>TIME_SERIES_WEEKLY</option>
-            <option>TIME_SERIES_WEEKLY_ADJUSTED</option>
             <option>TIME_SERIES_MONTHLY</option>
-            <option>TIME_SERIES_MONTHLY_ADJUSTED</option>
-            <option>BATCH_STOCK_QUOTES</option>
           </select>
-      
           <span id=spnInterval >
             interval:
             <select id=selInterval >
@@ -53,10 +43,14 @@
           <button onclick=getAlphaVantagedata(); >get Alpha Vantage Data</button>
         </p>
         <div class="dropdown">
-          <button class="dropbtn">Aktier</button>
+          <button class="dropbtn">MA</button>
           <div class="dropdown-content">
-            <a href="#" onclick="getAktie('STO:EVO')">STO:EVO</a>
-            <a href="#" onclick="getAktie('STO:LUC')">STO:LUC</a>
+            <a href="#" onclick="maInput(10)">10</a>
+            <a href="#" onclick="maInput(20)">20</a>
+            <a href="#" onclick="maInput(50)">50</a>
+            <a href="#" onclick="maInput(50)">100</a>
+            <a href="#" onclick="maInput('remove')">remove</a>
+            <!-- <a href="#" onclick="getAktie('STO:LUC')">STO:LUC</a>
             <a href="#" onclick="getAktie('STO:AOI')">STO:AOI</a>
             <a href="#" onclick="getAktie('STO:ESSITY-B')">STO:ESSITY-B</a>
             <a href="#" onclick="getAktie('STO:INWI')">STO:INWI</a>
@@ -67,17 +61,25 @@
             <a href="#" onclick="getAktie('STO:ALIF-B')">STO:ALIF-B</a>
             <a href="#" onclick="getAktie('STO:RESURS')">STO:RESURS</a>
             <a href="#" onclick="getAktie('STO:INDT')">STO:INDT</a>
-            <a href="#" onclick="getAktie('STO:HEMF')">STO:HEMF</a>
+            <a href="#" onclick="getAktie('STO:HEMF')">STO:HEMF</a> -->
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn">EMA</button>
+          <div class="dropdown-content">
+            <a href="#" onclick="emaInput(7.0)">7</a>
+            <a href="#" onclick="emaInput(20.0)">20</a>
+            <a href="#" onclick="emaInput(50.0)">50</a>
+            <a href="#" onclick="emaInput(100.0)">100</a>
+            <a href="#" onclick="emaInput('remove')">remove</a>
+
           </div>
         </div>
           <div class = "hogstaraden"id ="aktien"></div>
-          <input type="range" id="koordinat" value="0" min="0" max="5500" 
+          Tid<input type="range" id="koordinat" value="0" min="0" max="2000" 
               oninput="channel()"/>
-        <!--   <input type="range" id="koordinat2" value="0" min="0" max="5000" 
-              oninput="ritaUtCandleSticks(-1)"/> -->
-         <!--  <button class="hogstaraden"id="left" onclick="sattTimerLeft(true)">vänster</button>
-          <button class="hogstaraden"id="right" onclick="sattTimerRight(true)">höger</button> -->
-          <input type="range" id="jusbredd" value="4" min="1" max="20" oninput="sattBredd()")/>
+          Bredd<input type="range" id="jusbredd" value="7" min="1" max="20" oninput="sattBredd()"/>
+          VisnStorl<input type="range" id="jusstorl" value="7" min="3" max="300" oninput="aktArrStorl()"/>
     <canvas id="myCanvas" width="1250" height="460" style="border:2px solid #000000">
     </canvas>  
 
