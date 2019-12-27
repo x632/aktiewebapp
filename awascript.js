@@ -8,13 +8,22 @@
     var timeSeries;
     function getAktie(data){
         const func = selFunction.value;
+        const func2 = selInterval.value;
         console.log(func);
         if (func=="TIME_SERIES_DAILY")
         {timeSeries="Time Series (Daily)"}
         if (func=="TIME_SERIES_WEEKLY")
         {timeSeries="Weekly Time Series"}
-        if (func=="TIME_SERIES_INTRADAY")
+        if (func=="TIME_SERIES_INTRADAY" && func2=="60min")
         {timeSeries="Time Series (60min)"}
+        if (func=="TIME_SERIES_INTRADAY" && func2=="30min")
+        {timeSeries="Time Series (30min)"}
+        if (func=="TIME_SERIES_INTRADAY" && func2=="15min")
+        {timeSeries="Time Series (15min)"}
+        if (func=="TIME_SERIES_INTRADAY" && func2=="5min")
+        {timeSeries="Time Series (5min)"}
+        if (func=="TIME_SERIES_INTRADAY" && func2=="1min")
+        {timeSeries="Time Series (1min)"}
         if (func=="TIME_SERIES_MONTHLY")
         {timeSeries="Monthly Time Series"}
         rikt=0;riktning=0; 
@@ -24,11 +33,12 @@
         document.getElementById("aktien").textContent=aktien;
         arr=Object.entries(data2[timeSeries]);
         for (i = 0;i < arr.length; i++){
-            var _tid = (arr[i][0]);
+            var tid = (arr[i][0]);
             open[i] = parseFloat(arr[i][1]["1. open"]);
             high[i] = parseFloat(arr[i][1]["2. high"]);    
             low[i] = parseFloat(arr[i][1]["3. low"]);
             close[i] = parseFloat(arr[i][1]["4. close"]); 
+            console.log("tid: "+tid[i]);
         }
         ritaUtCandleSticks(0)
     }
