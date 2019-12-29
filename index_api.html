@@ -67,12 +67,11 @@
         <div class="dropdown">
           <button class="dropbtn">EMA</button>
           <div class="dropdown-content">
-            <a href="#" onclick="emaInput(7.0)">7</a>
-            <a href="#" onclick="emaInput(20.0)">20</a>
-            <a href="#" onclick="emaInput(50.0)">50</a>
-            <a href="#" onclick="emaInput(100.0)">100</a>
-            <a href="#" onclick="emaInput(0.0)">remove</a>
-
+            <a href="#" onclick="emaInput(7)">7</a>
+            <a href="#" onclick="emaInput(20)">20</a>
+            <a href="#" onclick="emaInput(50)">50</a>
+            <a href="#" onclick="emaInput(100)">100</a>
+            <a href="#" onclick="emaInput(0)">remove</a>
           </div>
         </div>
           <div class = "hogstaraden"id ="aktien"></div>
@@ -81,8 +80,7 @@
           Bredd<input type="range" id="jusbredd" value="7" min="1" max="20" oninput="sattBredd()"/>
           VisnStorl<input type="range" id="jusstorl" value="7" min="3" max="300" oninput="aktArrStorl()"/>
     <canvas id="myCanvas" width="1250" height="460" style="border:2px solid #000000">
-    </canvas>  
-
+    </canvas> 
 </body>
 </html>
 

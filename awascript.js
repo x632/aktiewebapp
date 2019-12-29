@@ -31,18 +31,18 @@
         document.getElementById("aktien").textContent=aktien;
         arr=Object.entries(data2[timeSeries]);
         for (i = 0;i < arr.length; i++){
-            var tid = (arr[i][0]);
+            //var tid = (arr[i][0]);
             open[i] = parseFloat(arr[i][1]["1. open"]);
             high[i] = parseFloat(arr[i][1]["2. high"]);    
             low[i] = parseFloat(arr[i][1]["3. low"]);
             close[i] = parseFloat(arr[i][1]["4. close"]); 
-            console.log("tid: "+tid[i]);
         }
-        if(visaMA>0){maInput(visaMA)};
-        if(visaEMA>0.0){
-            emaInput(visaEMA);
-            console.log("Ritar ena func")
-        };
+        if(visaMA>0){
+            maInput(visaMA)
+        }
+        if(visaEMA>0){
+            emaInput(visaEMA)
+        }
         ritaUtCandleSticks(0)
     }
     function aktArrStorl(){
@@ -62,22 +62,21 @@
         }
         else {
              visaMA=0;
-                
         }
         ritaUtCandleSticks(riktning)
     }   
     function emaInput(emaAnta){
-        if (emaAnta > 0.0) {
+        if (emaAnta > 0) {
             var k = 2.0/(emaAnta + 1.0);b=close.length-1;
-            ema [2000]= close[2000];
-            for (var i = 1999; i >0; i--) {
-              ema[i]=(close[i] * k + ema[i + 1.0] * (1.0 - k));
+            ema [b]= close[b];
+            for (i = (b-1); i >0; i--) {
+              ema[i]=(close[i] * k + ema[i + 1] * (1.0 - k));
             }
-            console.log("Varit i ema utr funktion");
-            visaEMA=emaAnta;    
+            console.log("ema utr funktion"+ema[1998]);
+            visaEMA = parseFloat(emaAnta);    
         }
         else{
-            visaEMA=0.0;
+            visaEMA=0;
         }
         ritaUtCandleSticks(riktning) 
     }
@@ -172,8 +171,8 @@
             ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ma[utr]*hojd),2,2);
             }
             //rita ut EMA
-            if (visaEMA>0.0){
-                console.log("Varit i utskriftfunlk för EMA");
+            if (visaEMA>0){
+                console.log("utskriftsfunk för EMA "+visaEMA+" "+ema[100]);
             ctx.fillStyle = '#CC0000';
             ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ema[utr]*hojd),2,2);
             }
