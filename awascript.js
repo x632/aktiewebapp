@@ -3,13 +3,12 @@
     //https://www.alphavantage.co/query?function=EMA&symbol=MSFT&interval=weekly&time_period=10&series_type=open&apikey=PI94RGOINPZE8JOZ'
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
     //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
-    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,ma=[],ema=[],visaEMA=true,visaMA=true;
+    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,ma=[],ema=[],visaEMA=0.0,visaMA=0;
     var riktning=0;rikt=0;
     var timeSeries;
     function getAktie(data){
         const func = selFunction.value;
         const func2 = selInterval.value;
-        console.log(func);
         if (func=="TIME_SERIES_DAILY")
         {timeSeries="Time Series (Daily)"}
         if (func=="TIME_SERIES_WEEKLY")
@@ -28,7 +27,6 @@
         {timeSeries="Monthly Time Series"}
         rikt=0;riktning=0; 
         var data2=JSON.parse(data);
-        console.log(data2);
         var aktien= data2["Meta Data"]["2. Symbol"];
         document.getElementById("aktien").textContent=aktien;
         arr=Object.entries(data2[timeSeries]);
@@ -40,6 +38,11 @@
             close[i] = parseFloat(arr[i][1]["4. close"]); 
             console.log("tid: "+tid[i]);
         }
+        if(visaMA!=0){maInput(visaMA)};
+        if(visaEMA!=0.0){
+            emaInput(visaEMA);
+            console.log("Ritar ena func")
+        };
         ritaUtCandleSticks(0)
     }
     function aktArrStorl(){
@@ -47,7 +50,7 @@
             ritaUtCandleSticks(riktning);
         }
     function maInput(maAnta){
-        if (maAnta!='remove') {
+        if (maAnta>0) {
             for (i = 0; i < close.length; i++){ //loopar alla cs
             utrva=0.0;
             for (j = i; j < i+maAnta ; j++) {  //loopar antalMA på alla cs
@@ -55,26 +58,26 @@
             }
             ma[i]=utrva/maAnta;         
             }  
-            visaMA=true;
+            visaMA=maAnta;
         }
         else {
-             visaMA=false;
+             visaMA=0;
                 
         }
         ritaUtCandleSticks(riktning)
     }   
     function emaInput(emaAnta){
-        if (emaAnta != 'remove') {
+        if (emaAnta > 0.0) {
             var k = 2.0/(emaAnta + 1.0);b=close.length-1;
-            console.log("length: "+b);
             ema [2000]= close[2000];
             for (var i = 1999; i >0; i--) {
               ema[i]=(close[i] * k + ema[i + 1.0] * (1.0 - k));
             }
-            visaEMA=true;    
+            console.log("Varit i ema utr funktion");
+            visaEMA=emaAnta;    
         }
         else{
-            visaEMA=false;
+            visaEMA=0.0;
         }
         ritaUtCandleSticks(riktning) 
     }
@@ -114,7 +117,6 @@
   
     function ritaUtCandleSticks(riktning){
         if(riktning<0){riktning=0;}
-        console.log("variabeln som har tagits emot: "+riktning);
         range=raknaUtRange(riktning);
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
@@ -165,12 +167,12 @@
         utr=(aktivArrayStorlek-i)+riktning;
         
             //rita ut MA
-            if (visaMA){
+            if (visaMA>0){
             ctx.fillStyle = '#0000cc';
             ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ma[utr]*hojd),2,2);
             }
             //rita ut EMA
-            if (visaEMA){
+            if (visaEMA>0.0){
             ctx.fillStyle = '#CC0000';
             ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ema[utr]*hojd),2,2);
             }
