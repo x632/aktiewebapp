@@ -38,8 +38,8 @@
             close[i] = parseFloat(arr[i][1]["4. close"]); 
             console.log("tid: "+tid[i]);
         }
-        if(visaMA!=0){maInput(visaMA)};
-        if(visaEMA!=0.0){
+        if(visaMA>0){maInput(visaMA)};
+        if(visaEMA>0.0){
             emaInput(visaEMA);
             console.log("Ritar ena func")
         };
@@ -173,6 +173,7 @@
             }
             //rita ut EMA
             if (visaEMA>0.0){
+                console.log("Varit i utskriftfunlk för EMA");
             ctx.fillStyle = '#CC0000';
             ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ema[utr]*hojd),2,2);
             }
