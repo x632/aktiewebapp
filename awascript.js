@@ -120,7 +120,7 @@
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         //var aktivArrayStorlek = 130;//hur många csticks
-        var ch=460,avstand=9,hojd,utr; //utr = variabeln som spegelvänder aktien 
+        var ch=500,avstand=9,hojd,utr; //utr = variabeln som spegelvänder aktien 
         var hojd = (ch/range[0]);//range[0] = skillnaden mellan högsta och lägsta - "rangen"
         //range[3] = den procentuella skillnaden mellan range och högsta
         ch *= range[3];

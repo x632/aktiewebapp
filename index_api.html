@@ -9,16 +9,16 @@
     <script type="text/javascript" src="awascript.js"></script>  
 </head>
 <body>
-        <p>Symbol: &nbsp;<input id=inpSymbol value='STO:LUC' ></p>
-       
+        Symbol: &nbsp;<input id=inpSymbol value='STO:LUC' >
           <select id=selFunction onchange=setInterval();>
             <option>TIME_SERIES_INTRADAY</option>
             <option>TIME_SERIES_DAILY</option>
             <option>TIME_SERIES_WEEKLY</option>
             <option>TIME_SERIES_MONTHLY</option>
           </select>
+     
           <span id=spnInterval >
-            interval:
+            &nbsp;interval:
             <select id=selInterval >
                 <option>1min</option>
                 <option>5min</option>
@@ -27,21 +27,21 @@
                 <option>60min</option>
             </select>
           </span>
-        </p>
+        
       
-        <p>
+        <span>
       
-          output size:
+          &nbsp;output size:
           <select id=selSize >
             <option>full</option>
             <option>compact</option>
           </select>
       
-        </p>
-      
-        <p>
-          <button onclick=getAlphaVantagedata(); >get Data</button>
-        </p>
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>
+          <button class="dropbtn"onclick=getAlphaVantagedata();>get Data</button><br><br>
+        </span>
         <div class="dropdown">
           <button class="dropbtn">MA</button>
           <div class="dropdown-content">
@@ -50,18 +50,6 @@
             <a href="#" onclick="maInput(50)">50</a>
             <a href="#" onclick="maInput(100)">100</a>
             <a href="#" onclick="maInput(0)">remove</a>
-            <!-- <a href="#" onclick="getAktie('STO:LUC')">STO:LUC</a>
-            <a href="#" onclick="getAktie('STO:AOI')">STO:AOI</a>
-            <a href="#" onclick="getAktie('STO:ESSITY-B')">STO:ESSITY-B</a>
-            <a href="#" onclick="getAktie('STO:INWI')">STO:INWI</a>
-            <a href="#" onclick="getAktie('STO:ICA')">STO:ICA</a>
-            <a href="#" onclick="getAktie('STO:LEO')">STO:LEO</a>
-            <a href="#" onclick="getAktie('STO:AAK')">STO:AAK</a>
-            <a href="#" onclick="getAktie('STO:SOBI')">STO:SOBI</a>
-            <a href="#" onclick="getAktie('STO:ALIF-B')">STO:ALIF-B</a>
-            <a href="#" onclick="getAktie('STO:RESURS')">STO:RESURS</a>
-            <a href="#" onclick="getAktie('STO:INDT')">STO:INDT</a>
-            <a href="#" onclick="getAktie('STO:HEMF')">STO:HEMF</a> -->
           </div>
         </div>
         <div class="dropdown">
@@ -79,7 +67,8 @@
               oninput="channel()"/>
           Bredd<input type="range" id="jusbredd" value="7" min="1" max="20" oninput="sattBredd()"/>
           VisnStorl<input type="range" id="jusstorl" value="7" min="3" max="300" oninput="aktArrStorl()"/>
-    <canvas id="myCanvas" width="1250" height="460" style="border:2px solid #000000">
+          <br><br>
+    <canvas id="myCanvas" width="1250" height="550" style="border:2px solid #000000">
     </canvas> 
 </body>
 </html>
