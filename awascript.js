@@ -1,9 +1,5 @@
-//setInterval('getISS()', 3000)
-    var arr,aktiv=false,flyttKorTimer,flyttaKordTimer,rikt=0,riktning=0, bredd=7;
-    //https://www.alphavantage.co/query?function=EMA&symbol=MSFT&interval=weekly&time_period=10&series_type=open&apikey=PI94RGOINPZE8JOZ'
-    //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=STO:LUC&interval=5min&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
-    //const api_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
-    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,ma=[],ema=[],visaEMA=0.0,visaMA=0;
+ var arr,aktiv=false,flyttKorTimer,flyttaKordTimer,rikt=0,riktning=0, bredd=7,timer,counter=0;
+    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,ma=[],ema=[],visaEMA=0.0,visaMA=0,data;
     var riktning=0;rikt=0;
     var timeSeries;
     function getAktie(data){
@@ -45,6 +41,20 @@
         }
         ritaUtCandleSticks(0)
     }
+    function upDate(){  
+        if (counter%2==0){
+            document.getElementById("realtime").style.backgroundColor = "#ff0000";    
+        console.log("på "+counter);
+        timer = setInterval(getAlphaVantagedata,15000);
+        }
+        if (counter%2!=0){
+            document.getElementById("realtime").style.backgroundColor = "#922d0f"; 
+            console.log("av "+counter);
+            clearInterval(timer);
+        }
+        counter++;
+        if(counter==1000){counter=0};
+    }
     function aktArrStorl(){
         aktivArrayStorlek = parseInt(document.getElementById("jusstorl").value);
             ritaUtCandleSticks(riktning);
@@ -72,7 +82,6 @@
             for (i = (b-1); i >0; i--) {
               ema[i]=(close[i] * k + ema[i + 1] * (1.0 - k));
             }
-            console.log("ema utr funktion"+ema[1998]);
             visaEMA = parseFloat(emaAnta);    
         }
         else{
@@ -86,14 +95,11 @@
             riktning=close.length-aktivArrayStorlek;
             console.log("Close length"+close.length);
         } 
-        
-        console.log(riktning);
         ritaUtCandleSticks(riktning);
         }
     
     function sattBredd(){
         bredd = parseInt(document.getElementById("jusbredd").value);
-        console.log(bredd);
         ritaUtCandleSticks(riktning);
         }
     function raknaUtRange(rikt){
@@ -243,11 +249,9 @@
     }
     } 
 }
-
-//https://www.alphavantage.co/query?function=EMA&symbol=MSFT&interval=weekly&time_period=10&series_type=open&apikey=PI94RGOINPZE8JOZ'
-//https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbol+'&outputsize=compact&apikey=PI94RGOINPZE8JOZ'
 var timeSeries;
 function getAlphaVantagedata() {
+    console.log("Varit i getData ");
     const func = selFunction.value; //'function is a reserved word
     const size = selSize.value;
     const interval = selInterval.value;
@@ -276,6 +280,6 @@ function requestFile( url ) {
 
     }
 }
-function setInterval() {
+function sInterval() {
     spnInterval.style.display = selFunction.value !== 'TIME_SERIES_INTRADAY' ? 'none' : '';
 }

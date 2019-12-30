@@ -2,13 +2,30 @@
         background-color: #8a6b26;
         }
         .dropbtn {
-          background-color: rgb(81, 133, 36);
+          background-color: rgb(68, 111, 31);
           color: rgb(31, 29, 29);
           padding: 6px;
           font-size: 16px;
           border-radius: 6px; 
           border: none;
         }
+        .abtn {
+            background-color: rgb(68, 111, 31);
+            color: rgb(31, 29, 29);
+            padding: 6px;
+            font-size: 16px;
+            border-radius: 6px; 
+            border: none;
+          }
+ 
+        .bbtn {
+            background-color: rgb(146, 45, 15);
+            color: rgb(31, 29, 29);
+            padding: 6px;
+            font-size: 16px;
+            border-radius: 6px; 
+            border: none;
+          } 
         
         .dropdown {
           position: relative;
@@ -41,6 +58,8 @@
         
         .dropdown:hover .dropbtn {background-color: #3ca23f;}
 
+        .abtn:hover {background-color: #3ca23f;}
+        .bbtn:hover {background-color: #f74222;}
         input[type=range] {
           /*removes default webkit styles*/
           -webkit-appearance: none;
@@ -49,7 +68,7 @@
           border: 1px solid rgb(124, 71, 71);
           
           /*required for proper track sizing in FF*/
-          width: 300px;
+          width: 250px;
       }
       input[type=range]::-webkit-slider-runnable-track {
           width: 300px;

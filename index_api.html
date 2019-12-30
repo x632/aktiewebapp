@@ -10,14 +10,14 @@
 </head>
 <body>
         Symbol: &nbsp;<input id=inpSymbol value='STO:LUC' >
-          <select id=selFunction onchange=setInterval();>
+          <select id=selFunction onchange=sInterval();>
             <option>TIME_SERIES_INTRADAY</option>
             <option>TIME_SERIES_DAILY</option>
             <option>TIME_SERIES_WEEKLY</option>
             <option>TIME_SERIES_MONTHLY</option>
           </select>
      
-          <span id=spnInterval >
+          <span id=spnInterval>
             &nbsp;interval:
             <select id=selInterval >
                 <option>1min</option>
@@ -27,21 +27,22 @@
                 <option>60min</option>
             </select>
           </span>
-        
       
-        <span>
-      
+          <span>
           &nbsp;output size:
           <select id=selSize >
             <option>full</option>
             <option>compact</option>
           </select>
-      
         </span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <span>
-          <button class="dropbtn"onclick=getAlphaVantagedata();>get Data</button><br><br>
+          <button class="abtn"onclick=getAlphaVantagedata();>Get data</button>
         </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><button id="realtime" class="bbtn"onclick=upDate();>Realtime update</button>
+        </span>
+        <br><br>
         <div class="dropdown">
           <button class="dropbtn">MA</button>
           <div class="dropdown-content">
