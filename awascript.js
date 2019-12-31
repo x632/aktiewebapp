@@ -3,6 +3,7 @@
     var riktning=0;rikt=0;
     var timeSeries;
     function getAktie(data){
+        open=[],high =[],low=[],close=[];
         const func = selFunction.value;
         const func2 = selInterval.value;
         if (func=="TIME_SERIES_DAILY")
@@ -45,6 +46,8 @@
         if(visaEMA>0){
             emaInput(visaEMA)
         }
+        var input = document.getElementById("koordinat");
+        input.setAttribute("max",close.length-120); 
         ritaUtCandleSticks(0)
     }
     function upDate(){  
