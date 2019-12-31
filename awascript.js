@@ -1,14 +1,18 @@
- var arr,aktiv=false,flyttKorTimer,flyttaKordTimer,rikt=0,riktning=0, bredd=7,timer,counter=0;
-    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 130,ma=[],ema=[],visaEMA=0.0,visaMA=0,data;
+ var arr,aktiv=false,flyttKorTimer,flyttaKordTimer,rikt=0,riktning=0, bredd=7,timer,counter=0,data2,tid=[];uppLosning="";var res=[];
+    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 128,ma=[],ema=[],visaEMA=0.0,visaMA=0,data;
     var riktning=0;rikt=0;
     var timeSeries;
     function getAktie(data){
         const func = selFunction.value;
         const func2 = selInterval.value;
         if (func=="TIME_SERIES_DAILY")
-        {timeSeries="Time Series (Daily)"}
+        {timeSeries="Time Series (Daily)";
+        uppLosning="Daily";
+        }
         if (func=="TIME_SERIES_WEEKLY")
-        {timeSeries="Weekly Time Series"}
+        {timeSeries="Weekly Time Series"
+        uppLosning="Weekly";
+        }
         if (func=="TIME_SERIES_INTRADAY" && func2=="60min")
         {timeSeries="Time Series (60min)"}
         if (func=="TIME_SERIES_INTRADAY" && func2=="30min")
@@ -20,14 +24,16 @@
         if (func=="TIME_SERIES_INTRADAY" && func2=="1min")
         {timeSeries="Time Series (1min)"}
         if (func=="TIME_SERIES_MONTHLY")
-        {timeSeries="Monthly Time Series"}
+        {timeSeries="Monthly Time Series"
+        uppLosning="Monthly";
+        }
         rikt=0;riktning=0; 
-        var data2=JSON.parse(data);
+        data2=JSON.parse(data);
         var aktien= data2["Meta Data"]["2. Symbol"];
         document.getElementById("aktien").textContent=aktien;
         arr=Object.entries(data2[timeSeries]);
         for (i = 0;i < arr.length; i++){
-            //var tid = (arr[i][0]);
+            tid [i]= arr[i][0];
             open[i] = parseFloat(arr[i][1]["1. open"]);
             high[i] = parseFloat(arr[i][1]["2. high"]);    
             low[i] = parseFloat(arr[i][1]["3. low"]);
@@ -53,7 +59,7 @@
             clearInterval(timer);
         }
         counter++;
-        if(counter==1000){counter=0};
+        if(counter==100){counter=0};
     }
     function aktArrStorl(){
         aktivArrayStorlek = parseInt(document.getElementById("jusstorl").value);
@@ -93,7 +99,6 @@
         riktning = parseInt(document.getElementById("koordinat").value);
         if (riktning>=close.length) {
             riktning=close.length-aktivArrayStorlek;
-            console.log("Close length"+close.length);
         } 
         ritaUtCandleSticks(riktning);
         }
@@ -166,40 +171,67 @@
         ctx.fillStyle = '#000095';
         ctx.fillText(pristext, 40, ch-(close[0]*hojd)+14);
         ctx.stroke();
-        ctx.setLineDash([]);//ta bort punkter från linjeritningen
     //rita ut candlesticks*********************************************************
     for (i = aktivArrayStorlek; i > 0 ; i-- ){ //från aktivt arrayområdes slut till början			
-        utr=(aktivArrayStorlek-i)+riktning;
+        utr=(aktivArrayStorlek-i)+riktning;var xk=4;
         
+            //x koordinat - tiden
+            if (uppLosning=="Daily"){
+                a=(tid[utr]);
+                res [utr] = a.slice(5,7);//slica månad
+                b=parseInt(res[utr]);
+                c=parseInt(res[utr-1]);
+                console.log(res[utr]);
+                if (b!=c){
+                    console.log("Varit här!!!");
+                    ctx.setLineDash([2, 3]);
+                    ctx.beginPath();
+                    ctx.lineWidth=1;
+                    ctx.strokeStyle = '#909090';
+                    ctx.moveTo((i+xk)*avstand+bredd+bredd,0);//startpunkt x,y
+                    ctx.lineTo((i+xk)*avstand+bredd+bredd,ch);
+                    ctx.stroke();
+                    //********  datum utskrift  ********* 
+                    ctx.fillStyle = '#909090';
+                    ctx.font = "12px Arial";
+                    ctx.fillText(tid[utr], ((i-7)+xk)*avstand+bredd, 520);
+                    ctx.stroke();
+                }
+            }
+            ctx.setLineDash([]);//ta bort punkter från linjeritningen
+           
+
+
+
+            //ctx.setLineDash([]);
             //rita ut MA
             if (visaMA>0){
             ctx.fillStyle = '#0000cc';
-            ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ma[utr]*hojd),2,2);
+            ctx.fillRect((i+xk)*avstand+bredd+(bredd/2),ch-(ma[utr]*hojd),2,2);
             }
             //rita ut EMA
             if (visaEMA>0){
-                console.log("utskriftsfunk för EMA "+visaEMA+" "+ema[100]);
             ctx.fillStyle = '#CC0000';
-            ctx.fillRect(i*avstand+bredd+(bredd/2),ch-(ema[utr]*hojd),2,2);
+            ctx.fillRect((i+xk)*avstand+bredd+(bredd/2),ch-(ema[utr]*hojd),2,2);
             }
     if (open[utr]>close[utr]) 	{				//BEARcandle
             //Rita kropp           
             ctx.lineWidth=1;
             ctx.fillStyle = '#FF0000';
-            ctx.fillRect(i*avstand+bredd,ch-open[utr]*hojd,bredd,open[utr]*hojd-close[utr]*hojd);			
+            ctx.fillRect((i+xk)*avstand+bredd,ch-open[utr]*hojd,bredd,open[utr]*hojd-close[utr]*hojd);			
             //Rita veke ovanför
             ctx.beginPath();
             ctx.lineWidth=2;
             ctx.strokeStyle ='#000000';
-            ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);//startpunkt x,y
-            ctx.lineTo((i*avstand+bredd)+(bredd/2),(ch-(open[utr]*hojd))+(ch-(high[utr]*hojd))-(ch-(open[utr]*hojd)));
+            ctx.moveTo((i+xk)*avstand+bredd+(bredd/2),ch-open[utr]*hojd);//startpunkt x,y
+            ctx.lineTo(((i+xk)*avstand+bredd)+(bredd/2),(ch-(open[utr]*hojd))+(ch-(high[utr]*hojd))-(ch-(open[utr]*hojd)));
             ctx.stroke();
             //Rita veke under
             ctx.beginPath();
             ctx.lineWidth=2;
             ctx.strokeStyle ="#000000";
-            ctx.moveTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
-            ctx.lineTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
+            ctx.moveTo((i+xk)*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
+            ctx.lineTo((i+xk)*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
             ctx.stroke();
     }
     if (close[utr]>open[utr]) 	{				//BULLcandle
@@ -207,20 +239,20 @@
         //Rita kropp
         ctx.lineWidth=1;
         ctx.fillStyle = "#009900";
-        ctx.fillRect(i*avstand+bredd,ch-(close[utr]*hojd),bredd,close[utr]*hojd-open[utr]*hojd);//(startpunkt x,y),bredd,höjd						
+        ctx.fillRect((i+xk)*avstand+bredd,ch-(close[utr]*hojd),bredd,close[utr]*hojd-open[utr]*hojd);//(startpunkt x,y),bredd,höjd						
         //veke ovanför
         ctx.beginPath();
         ctx.lineWidth=2;
         ctx.strokeStyle ="#000000";
-        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd));
-        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
+        ctx.moveTo((i+xk)*avstand+bredd+(bredd/2),ch-(close[utr]*hojd));
+        ctx.lineTo((i+xk)*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
         ctx.stroke();
         //veke under
         ctx.beginPath();
         ctx.strokeStyle ="#000000";
         ctx.lineWidth=2;
-        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
-        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
+        ctx.moveTo((i+xk)*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
+        ctx.lineTo((i+xk)*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
         ctx.stroke();
     }
     if (close[utr]==open[utr]) 	{				//Doji
@@ -228,22 +260,22 @@
         //Rita kropp
         ctx.lineWidth=1;
         ctx.fillStyle ="#000000";
-        ctx.moveTo(i*avstand+bredd,ch-close[utr]*hojd);
-        ctx.lineTo(i*avstand+bredd+bredd,ch-close[utr]*hojd);
+        ctx.moveTo((i+xk)*avstand+bredd,ch-close[utr]*hojd);
+        ctx.lineTo((i+xk)*avstand+bredd+bredd,ch-close[utr]*hojd);
         ctx.stroke();
         //veke ovanför
         ctx.beginPath();
         ctx.lineWidth=2;
         ctx.strokeStyle ="#000000";
-        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
-        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
+        ctx.moveTo((i+xk)*avstand+bredd+(bredd/2),ch-close[utr]*hojd);
+        ctx.lineTo((i+xk)*avstand+bredd+(bredd/2),ch-(close[utr]*hojd)+(ch-(high[utr]*hojd))-(ch-(close[utr]*hojd)));
         ctx.stroke();
         //veke under
         ctx.beginPath();
         ctx.lineWidth=2;
         ctx.strokeStyle ="#000000";
-        ctx.moveTo(i*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
-        ctx.lineTo(i*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
+        ctx.moveTo((i+xk)*avstand+bredd+(bredd/2),ch-open[utr]*hojd);
+        ctx.lineTo((i+xk)*avstand+bredd+(bredd/2),ch-low[utr]*hojd);
         ctx.stroke();	
        			                               
     }
