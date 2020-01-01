@@ -11,19 +11,29 @@
         uppLosning="Daily";
         }
         if (func=="TIME_SERIES_WEEKLY")
-        {timeSeries="Weekly Time Series"
+        {timeSeries="Weekly Time Series";
         uppLosning="Weekly";
         }
         if (func=="TIME_SERIES_INTRADAY" && func2=="60min")
-        {timeSeries="Time Series (60min)"}
+        {timeSeries="Time Series (60min)";
+        uppLosning="60min";
+        }
         if (func=="TIME_SERIES_INTRADAY" && func2=="30min")
-        {timeSeries="Time Series (30min)"}
+        {timeSeries="Time Series (30min)";
+        uppLosning="30min";
+        }
         if (func=="TIME_SERIES_INTRADAY" && func2=="15min")
-        {timeSeries="Time Series (15min)"}
+        {timeSeries="Time Series (15min)"
+        uppLosning="15min";
+        }
         if (func=="TIME_SERIES_INTRADAY" && func2=="5min")
-        {timeSeries="Time Series (5min)"}
+        {timeSeries="Time Series (5min)"
+        uppLosning="5min";
+        }
         if (func=="TIME_SERIES_INTRADAY" && func2=="1min")
-        {timeSeries="Time Series (1min)"}
+        {timeSeries="Time Series (1min)"
+        uppLosning="1min";
+        }
         if (func=="TIME_SERIES_MONTHLY")
         {timeSeries="Monthly Time Series"
         uppLosning="Monthly";
@@ -142,7 +152,6 @@
         ctx.clearRect(0, 0, window.innerWidth,window.innerHeight);
         ctx.fillStyle = '#ffd38b'; 
         ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
-    //******************************************************************************
     //rita ut prislinjerna och siffrorna
         var pris;
         pris=range[0]*0.10;//delar rangen i 10 delar med början från lägsta(range[2])
@@ -181,12 +190,11 @@
             //x koordinat - tiden
             if (uppLosning=="Daily"){
                 a=(tid[utr]);
-                res [utr] = a.slice(5,7);//slica månad
+                res [utr] = a.slice(5,7);//slica ut månad
                 b=parseInt(res[utr]);
                 c=parseInt(res[utr-1]);
-                console.log(res[utr]);
                 if (b!=c){
-                    console.log("Varit här!!!");
+                    //Utskrift av datumlinjerna
                     ctx.setLineDash([2, 3]);
                     ctx.beginPath();
                     ctx.lineWidth=1;
@@ -201,12 +209,33 @@
                     ctx.stroke();
                 }
             }
+            if (uppLosning=="Monthly"||uppLosning=="Weekly"){
+                var d=11;
+                if (uppLosning=="Monthly") {d=10};
+                if (uppLosning=="Weekly") {d=50};
+                a=(tid[utr]);
+                res [utr] = a.slice(0,4);
+                b=parseInt(res[utr]);
+                c=parseInt(res[utr-1]);
+                if (b!=c){
+                    //Utskrift av datumlinjerna
+                    ctx.setLineDash([2, 3]);
+                    ctx.beginPath();
+                    ctx.lineWidth=1;
+                    ctx.strokeStyle = '#909090';
+                    ctx.moveTo((i+xk)*avstand+bredd+bredd,0);//startpunkt x,y
+                    ctx.lineTo((i+xk)*avstand+bredd+bredd,ch);
+                    ctx.stroke();
+                    //********  datum utskrift  ********* 
+                    ctx.fillStyle = '#909090';
+                    ctx.font = "12px Arial";
+                    ctx.fillText(res[utr], ((i-d)+xk)*avstand+bredd, 520);
+                    ctx.stroke();
+                }
+            }
+           
             ctx.setLineDash([]);//ta bort punkter från linjeritningen
            
-
-
-
-            //ctx.setLineDash([]);
             //rita ut MA
             if (visaMA>0){
             ctx.fillStyle = '#0000cc';
