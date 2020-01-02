@@ -3,7 +3,7 @@
     var riktning=0;rikt=0;
     var timeSeries;
     function getAktie(data){
-        open=[],high =[],low=[],close=[];
+        open=[],high =[],low=[],close=[];ma=[];ema=[];
         const func = selFunction.value;
         const func2 = selInterval.value;
         if (func=="TIME_SERIES_DAILY")
@@ -137,7 +137,6 @@
         return range;
     }    
    
-  
     function ritaUtCandleSticks(riktning){
         if(riktning<0){riktning=0;}
         range=raknaUtRange(riktning);
@@ -183,11 +182,11 @@
         ctx.fillStyle = '#000095';
         ctx.fillText(pristext, 40, ch-(close[0]*hojd)+14);
         ctx.stroke();
-    //rita ut candlesticks*********************************************************
+    //rita ut candlesticks loopen ****************************************************
     for (i = aktivArrayStorlek; i > 0 ; i-- ){ //från aktivt arrayområdes slut till början			
-        utr=(aktivArrayStorlek-i)+riktning;var xk=4;
+        utr=(aktivArrayStorlek-i)+riktning;var xk=4;//xk=marginal
         
-            //x koordinat - tiden
+            //x koordinat - tiden DAGSFORMAT
             if (uppLosning=="Daily"){
                 a=(tid[utr]);
                 res [utr] = a.slice(5,7);//slica ut månad
@@ -205,14 +204,14 @@
                     //********  datum utskrift  ********* 
                     ctx.fillStyle = '#909090';
                     ctx.font = "12px Arial";
-                    ctx.fillText(tid[utr], ((i-7)+xk)*avstand+bredd, 520);
+                    ctx.fillText(tid[utr-1], ((i+1)+xk)*avstand+bredd, 520);
                     ctx.stroke();
                 }
             }
             if (uppLosning=="Monthly"||uppLosning=="Weekly"){
-                var d=11;
+                /* var d=11;
                 if (uppLosning=="Monthly") {d=10};
-                if (uppLosning=="Weekly") {d=50};
+                if (uppLosning=="Weekly") {d=50}; */
                 a=(tid[utr]);
                 res [utr] = a.slice(0,4);
                 b=parseInt(res[utr]);
@@ -229,11 +228,37 @@
                     //********  datum utskrift  ********* 
                     ctx.fillStyle = '#909090';
                     ctx.font = "12px Arial";
-                    ctx.fillText(res[utr], ((i-d)+xk)*avstand+bredd, 520);
+                    ctx.fillText(res[utr-1], ((i+1)+xk)*avstand+bredd, 520);
                     ctx.stroke();
                 }
             }
-           
+            if (uppLosning=="1min"||uppLosning=="5min"||uppLosning=="15min"||uppLosning=="30min"||uppLosning=="60min"){
+                res2=[];
+                /* if (uppLosning=="15min") {d=31};
+                if (uppLosning=="5min") {d=95}; */
+                if (tid[utr]!=""){
+                    a=(tid[utr]);
+                    res [utr] = a.slice(8,10);
+                    res2[utr] = a.slice(0,10);
+                    b=parseInt(res[utr]);
+                    c=parseInt(res[utr-1]);
+                    if (b!=c){
+                        //Utskrift av datumlinjerna
+                        ctx.setLineDash([2, 3]);
+                        ctx.beginPath();
+                        ctx.lineWidth=1;
+                        ctx.strokeStyle = '#909090';
+                        ctx.moveTo((i+xk)*avstand+bredd+bredd,0);//startpunkt x,y
+                        ctx.lineTo((i+xk)*avstand+bredd+bredd,ch);
+                        ctx.stroke();
+                        //********  datum utskrift  ********* 
+                        ctx.fillStyle = '#909090';
+                        ctx.font = "12px Arial";
+                        ctx.fillText(res2[utr-1], ((i+1)+xk)*avstand+bredd, 520);
+                        ctx.stroke();
+                    }
+                }   
+            }
             ctx.setLineDash([]);//ta bort punkter från linjeritningen
            
             //rita ut MA
