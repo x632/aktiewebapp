@@ -1,6 +1,7 @@
- var arr,aktiv=false,flyttKorTimer,flyttaKordTimer,rikt=0,riktning=0, bredd=7,timer,counter=0,data2,tid=[];uppLosning="";var res=[];
-    var skrivUt = [],open=[],high =[],low=[],close=[], aktivArrayStorlek = 128,ma=[],ema=[],visaEMA=0.0,visaMA=0,data;
-    var riktning=0;rikt=0;
+ var arr,aktiv=false,flyttKorTimer,flyttaKordTimer,rikt=0,riktning=0, bredd=7,timer,
+ counter=0,data2,tid=[],uppLosning="",res=[],skrivUt = [],open=[],high =[],low=[],
+ close=[], aktivArrayStorlek = 128,ma=[],ema=[],visaEMA=0.0,visaMA=0,data,
+ riktning=0,rikt=0;
     var timeSeries;
     function getAktie(data){
         open=[],high =[],low=[],close=[];ma=[];ema=[];
