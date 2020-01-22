@@ -187,6 +187,9 @@
     for (i = aktivArrayStorlek; i > 0 ; i-- ){ //från aktivt arrayområdes slut till början			
         utr=(aktivArrayStorlek-i)+riktning;var xk=4;//xk=marginal
             //x koordinat - tiden DAGSFORMAT
+            if (low[utr]==0){
+                low [utr] = open[utr]
+            } 
             if (uppLosning=="Daily"){
                 a = (tid[utr]);
                 b = (tid[utr+1])
