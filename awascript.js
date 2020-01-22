@@ -186,10 +186,10 @@
     //rita ut candlesticks loopen ****************************************************
     for (i = aktivArrayStorlek; i > 0 ; i-- ){ //från aktivt arrayområdes slut till början			
         utr=(aktivArrayStorlek-i)+riktning;var xk=4;//xk=marginal
-            //x koordinat - tiden DAGSFORMAT
-            if (low[utr]==0){
-                low [utr] = open[utr]
+        if (low[utr]==0){//Detta fixar felläs från servern
+            low [utr] = open[utr]
             } 
+            //x koordinat - tiden DAGSFORMAT
             if (uppLosning=="Daily"){
                 a = (tid[utr]);
                 b = (tid[utr+1])
@@ -344,7 +344,7 @@
 var timeSeries;
 function getAlphaVantagedata() {
     console.log("Varit i getData ");
-    const func = selFunction.value; //'function is a reserved word
+    const func = selFunction.value; 
     const size = selSize.value;
     const interval = selInterval.value;
     symbol = inpSymbol.value;
