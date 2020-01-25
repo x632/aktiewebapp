@@ -260,7 +260,9 @@
                         ctx.stroke();
                         //********  datum utskrift  ********* 
                         ctx.fillStyle = '#909090';
-                        ctx.font = "12px Arial";
+                        if (uppLosning=="60min") {
+                            ctx.font = "10px Arial"}
+                            else{ctx.font = "12px Arial"}
                         ctx.fillText(e, ((i+1)+xk)*avstand+bredd, 520);
                         ctx.stroke();
                     }
