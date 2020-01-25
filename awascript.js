@@ -50,6 +50,13 @@
             high[i] = parseFloat(arr[i][1]["2. high"]);    
             low[i] = parseFloat(arr[i][1]["3. low"]);
             close[i] = parseFloat(arr[i][1]["4. close"]); 
+            //fixar serverfel 
+            if (low[i]==0){
+                low[i]=close[i]
+            }
+            if (open[i]==0){
+                open[i]=close[i]
+            }
         }
         if(visaMA>0){
             maInput(visaMA)
@@ -186,9 +193,6 @@
     //rita ut candlesticks loopen ****************************************************
     for (i = aktivArrayStorlek; i > 0 ; i-- ){ //från aktivt arrayområdes slut till början			
         utr=(aktivArrayStorlek-i)+riktning;var xk=4;//xk=marginal
-        if (low[utr]==0){//Detta fixar felläs från servern
-            low [utr] = open[utr]
-            } 
             //x koordinat - tiden DAGSFORMAT
             if (uppLosning=="Daily"){
                 a = (tid[utr]);
