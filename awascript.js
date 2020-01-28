@@ -51,11 +51,20 @@
             low[i] = parseFloat(arr[i][1]["3. low"]);
             close[i] = parseFloat(arr[i][1]["4. close"]); 
             //fixar serverfel 
-            if (low[i]==0){
+            if (close[i] != 0 && low [i]== 0){
                 low[i]=close[i]
             }
-            if (open[i]==0){
-                open[i]=close[i]
+            if (open[i] != 0 && close[i] == 0){
+                close[i]=open[i]
+            }
+            if (close[i] != 0 && low[i] == 0){
+                low[i] = close[i]
+            }
+            if (close[i] == 0 && high[i] == 0 && low[i]==0 && open[i]==0) {
+                close[i] = close[i-1];
+                 high[i] = high[i-1];
+                 low[i] = low[i-1];
+                 open[i] = open[i-1];    
             }
         }
         if(visaMA>0){
