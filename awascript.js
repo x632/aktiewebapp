@@ -40,17 +40,17 @@
         uppLosning="Monthly";
         }
         rikt=0;riktning=0; 
-        data2=JSON.parse(data);
-        var aktien= data2["Meta Data"]["2. Symbol"];
-        document.getElementById("aktien").textContent=aktien;
-        arr=Object.entries(data2[timeSeries]);
+        //data2=JSON.parse(data3);
+        var aktien= data["Meta Data"]["2. Symbol"];
+        document.querySelector("#aktien").textContent=aktien;
+        arr=Object.entries(data[timeSeries]);
         for (i = 0;i < arr.length; i++){
             tid [i]= arr[i][0];
             open[i] = parseFloat(arr[i][1]["1. open"]);
             high[i] = parseFloat(arr[i][1]["2. high"]);    
             low[i] = parseFloat(arr[i][1]["3. low"]);
             close[i] = parseFloat(arr[i][1]["4. close"]); 
-            //fixar serverfel 
+            //fixar eventuella serverfel 
             if (close[i] != 0 && low [i]== 0){
                 low[i]=close[i]
             }
@@ -358,6 +358,7 @@
 }
 var timeSeries;
 function getAlphaVantagedata() {
+    apiKey = "PI94RGOINPZE8JOZ"
     console.log("Varit i getData ");
     const func = selFunction.value; 
     const size = selSize.value;
@@ -368,11 +369,17 @@ function getAlphaVantagedata() {
             '&interval=' + interval +
             '&outputsize=' + size +
             '&datatype=json' + 
-            '&apikey=' + "PI94RGOINPZE8JOZ"
+            '&apikey=' + apiKey
     
-    requestFile( url );
+    requestFile( url )
+    .then(response => {
+        let data = response
+        getAktie(data)
+         
+    });
+
 }
-function requestFile( url ) {
+/* function requestFile( url ) {
     const xhr = new XMLHttpRequest();
     xhr.open( 'GET', url, true );
     xhr.onerror = function( xhr ) { console.log( 'error:', xhr  ); };
@@ -386,6 +393,21 @@ function requestFile( url ) {
         getAktie(data);
 
     }
+} */
+
+async function requestFile(url){
+    const response = await fetch(url, {
+        method:'GET',
+        headers:{
+        }
+    });
+        if(response.ok){
+        return response.json()
+        }
+        else {
+        console.log("FEL!!!")
+        }
+    
 }
 function sInterval() {
     spnInterval.style.display = selFunction.value !== 'TIME_SERIES_INTRADAY' ? 'none' : '';
